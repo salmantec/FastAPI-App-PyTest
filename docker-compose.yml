@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./src
+    # --reload enables auto-reload so the server will restart after changes are made to the code base.
+    # --workers 1 provides a single worker process.
+    # --host 0.0.0.0 defines the address to host the server on.
+    # --port 8000 defines the port to host the server on.
+    # app.main:app tells Uvicorn where it can find the FastAPI ASGI application -- i.e., "within the 'app' module, you'll find the ASGI app, app = FastAPI(), in the 'main.py' file.
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    volumes:
+      - ./src/:/usr/src/app/
+    ports:
+      - 8002:8000
