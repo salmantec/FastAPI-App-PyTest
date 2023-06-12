@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from .api import ping
+from .api import ping, notes
 from .db import engine, database, metadata
 
 metadata.create_all(engine)
@@ -17,3 +17,4 @@ async def shutdown():
 
 
 app.include_router(ping.router)
+app.include_router(notes.router, prefix="/notes", tags=["notes"])

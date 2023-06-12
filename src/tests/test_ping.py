@@ -7,4 +7,4 @@ client = TestClient(app)
 def test_ping(test_app):
     response = client.get("/ping")
     assert response.status_code == 200
-    assert response.json() == {"Ping": "Pong!"}
+    assert response.json() == {"ping": "pong!"}
