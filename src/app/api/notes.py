@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, HTTPException
 
 from src.app.api.models import NoteSchema, NoteDB
@@ -25,3 +27,8 @@ async def read_note(id: int):
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
+
+
+@router.get("/", response_model=List[NoteDB])
+async def read_all_notes():
+    return await crud.get_all()
