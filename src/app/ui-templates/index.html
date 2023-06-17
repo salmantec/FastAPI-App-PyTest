@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="notes/" method="post">
+    <textarea name="task" rows="5" placeholder="Enter your note..."></textarea>
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock content%}

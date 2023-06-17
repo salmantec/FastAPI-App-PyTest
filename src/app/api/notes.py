@@ -1,9 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, HTTPException, Path, Request
+from fastapi.templating import Jinja2Templates
 
 from src.app.api.models import NoteSchema, NoteDB
 from src.app.api import crud
+
+templates = Jinja2Templates(directory="../ui-templates")
 
 router = APIRouter()
 
@@ -31,7 +34,8 @@ async def read_note(id: int = Path(..., gt=0)):
 
 @router.get("/", response_model=List[NoteDB])
 async def read_all_notes():
-    return await crud.get_all()
+    notes = await crud.get_all()
+    return templates.TemplateResponse("index.html", {"request": Request, "notes": notes})
 
 
 @router.put("/{id}/", response_model=NoteDB)
