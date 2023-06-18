@@ -1,12 +1,13 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Path, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from src.app.api.models import NoteSchema, NoteDB
 from src.app.api import crud
 
-templates = Jinja2Templates(directory="../ui-templates")
+templates = Jinja2Templates(directory="src/app/ui/templates")
 
 router = APIRouter()
 
@@ -35,11 +36,17 @@ async def read_note(id: int = Path(..., gt=0)):
 @router.get("/", response_model=List[NoteDB])
 async def read_all_notes():
     notes = await crud.get_all()
-    return templates.TemplateResponse("index.html", {"request": Request, "notes": notes})
+    return notes
+
+
+@router.get("/ui", response_class=HTMLResponse)
+async def ui_component(request: Request):
+    print(templates)
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @router.put("/{id}/", response_model=NoteDB)
-async def update_note(payload: NoteSchema, id: int = Path(..., gt=0),):
+async def update_note(payload: NoteSchema, id: int = Path(..., gt=0), ):
     note = await crud.get(id)
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
