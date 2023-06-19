@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Path, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from src.app.api.models import NoteSchema, NoteDB
@@ -35,14 +35,7 @@ async def read_note(id: int = Path(..., gt=0)):
 
 @router.get("/", response_model=List[NoteDB])
 async def read_all_notes():
-    notes = await crud.get_all()
-    return notes
-
-
-@router.get("/ui", response_class=HTMLResponse)
-async def ui_component(request: Request):
-    print(templates)
-    return templates.TemplateResponse("index.html", {"request": request})
+    return await crud.get_all()
 
 
 @router.put("/{id}/", response_model=NoteDB)
@@ -70,3 +63,12 @@ async def delete_note(id: int = Path(..., gt=0)):
     await crud.delete(id)
 
     return note
+
+
+# UI - Routers
+
+@router.get("/ui", response_class=HTMLResponse)
+async def ui_component(request: Request):
+    notes = await read_all_notes()
+    return templates.TemplateResponse("index.html", {"request": request, "notes": notes})
+
