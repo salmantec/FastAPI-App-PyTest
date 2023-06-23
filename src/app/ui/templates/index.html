@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form action="/notes/" method="post">
+        <label>Title:</label>
+        <div>
+            <input name="title" placeholder="Enter your title..." required/>
+        </div>
+        <label>Description:</label>
+        <div>
+            <textarea name="description" rows="10" cols="30" placeholder="Enter your description..." required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+    <h2>Notes:</h2>
+
+    <div>
+        {% for note in notes %}
+        <div>
+            <b>{{ note.title }}</b>
+        </div>
+        <div>
+            <ul>
+                <li><i>{{ note.description }}</i></li>
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock content%}
